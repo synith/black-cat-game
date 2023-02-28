@@ -3,61 +3,79 @@ using UnityEngine;
 namespace Synith
 {
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class UnitMovement : MonoBehaviour
+    public class UnitMovement : MonoBehaviour
     {
-        [SerializeField] protected float moveSpeed = 1f;
+        [SerializeField] float moveSpeed = 5f;
         [SerializeField] float rotationSpeed = 360f;
-        [SerializeField] protected int maxHealth = 100;
-        [SerializeField] protected Animator animator;
-
 
         Rigidbody rb;
 
-        protected virtual void Awake()
+        InputManager inputManager;
+
+        Vector2 inputDirection;
+
+        void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            inputManager = GetComponent<InputManager>();
+        }
+
+        private void Update()
+        {
+            HandleInput();  //TODO: Handle Input in separate class
+        }
+        void HandleInput()
+        {
+            inputDirection = inputManager.GetMovementInput();
         }
 
         void FixedUpdate()
         {
             HandleMovement();
-
-            if (animator != null)
-                HandleAnimation();
         }
 
-        void HandleAnimation()
-        {
-            if (CalculateMoveDirection() != Vector3.zero)
-            {
-                animator.SetBool("IsWalking", true);
-            }
-            else
-            {
-                animator.SetBool("IsWalking", false);
-            }
-        }
 
         void HandleMovement()
         {
-            // remove collision momentum
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
             Vector3 moveDirection = CalculateMoveDirection();
-            Vector3 rotationDirection = CalculateRotationDirection();
+            Quaternion rotationDirection = CalculateRotationDirection();
 
             if (moveDirection != Vector3.zero)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(rotationDirection);
-                Vector3 moveVector = transform.position + moveDirection * moveSpeed;
-                Quaternion rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotationSpeed * Time.fixedDeltaTime);
+                Vector3 position = transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
+                Quaternion rotation = Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime);
 
-                rb.Move(Vector3.Lerp(transform.position, moveVector, Time.fixedDeltaTime), rotation);
+                rb.Move(position, rotation);
             }
         }
 
-        protected abstract Vector3 CalculateMoveDirection();
-        protected abstract Vector3 CalculateRotationDirection();
+        Vector3 CalculateMoveDirection()
+        {
+            Vector2 input = inputDirection;
+            Vector3 moveDirection = Vector3.zero;
+            moveDirection += Vector3.ProjectOnPlane(Camera.main.transform.right, transform.up).normalized * input.x;
+            moveDirection += Vector3.ProjectOnPlane(Camera.main.transform.forward, transform.up).normalized * input.y;
+            return moveDirection;
+        }
+        Quaternion CalculateRotationDirection()
+        {
+            float targetAngle = Camera.main.transform.eulerAngles.y; //TODO: Get camera angle somewhere else
+            Vector3 rotationDirection = new (0, targetAngle, 0);
+            return Quaternion.Euler(rotationDirection);
+        }
+
+
+        Vector3 CalculateRotationDirection2()
+        {
+            if (CalculateMoveDirection() != Vector3.zero)
+            {
+                return CalculateMoveDirection();
+            }
+            else
+            {
+                return transform.forward;
+            }
+        }
+
     }
 }
