@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Synith
 {
-    public class InputManager : MonoBehaviour
+    public class UnitInput : MonoBehaviour
     {
         PlayerControls playerControls;
         Vector2 movementInput;

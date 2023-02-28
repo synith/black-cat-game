@@ -4,20 +4,21 @@ using UnityEngine;
 
 namespace Synith
 {
+    [RequireComponent(typeof(UnitInput), typeof(UnitMovement))]
     public class Unit : MonoBehaviour
     {
-        public InputManager InputManager { get; private set; }
+        public UnitInput UnitInput { get; private set; }
         public UnitMovement UnitMovement { get; private set; }
 
         void Awake()
         {
-            InputManager = GetComponent<InputManager>();
+            UnitInput = GetComponent<UnitInput>();
             UnitMovement = GetComponent<UnitMovement>();
         }
 
         void Update()
         {
-            InputManager.HandleAllInput();            
+            UnitInput.HandleAllInput();            
         }
 
         void FixedUpdate()

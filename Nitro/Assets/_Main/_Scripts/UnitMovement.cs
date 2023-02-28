@@ -8,12 +8,18 @@ namespace Synith
         [SerializeField] float moveSpeed = 4f;
         [SerializeField] float rotationSpeed = 5f;
         [SerializeField] float fixedSpeedRotateRatio = 60f;
-        [SerializeField] bool followCamera, fixedSpeedRotation;
+        [SerializeField] float movementForce = 300f;
+
+        [SerializeField] bool followCamera;
+        [SerializeField, Tooltip("Rotate at a constant angular speed, uncheck for snappier rotations")]
+        bool constantRotationRate;
+        [SerializeField, Tooltip("Rotations are not effected by physics system")]
+        bool kinematicRotation;
+
+        [SerializeField, Tooltip("Camera for this unit")] Transform cameraTransform;
+
 
         Rigidbody rb;
-
-        Transform cameraTransform;
-
         Unit unit;
 
         void Awake()
@@ -21,7 +27,10 @@ namespace Synith
             rb = GetComponent<Rigidbody>();
             unit = GetComponent<Unit>();
 
-            cameraTransform = Camera.main.transform;
+            if (cameraTransform == null)
+            {
+                cameraTransform = Camera.main.transform;
+            }
         }
         public void HandleAllMovement()
         {
@@ -35,26 +44,33 @@ namespace Synith
             if (moveDirection != Vector3.zero)
             {
                 Vector3 position = transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-                rb.MovePosition(position);
+                rb.MovePosition(position);    
             }
         }
         void HandleRotation()
         {
             Quaternion rotationDirection = CalculateRotationDirection();
 
-            Quaternion rotation = fixedSpeedRotation ?
-                Quaternion.Slerp(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime) :
-                Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * fixedSpeedRotateRatio * Time.fixedDeltaTime);
+            Quaternion rotation = constantRotationRate ?
+                Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * fixedSpeedRotateRatio * Time.fixedDeltaTime) :
+                Quaternion.Slerp(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime);
 
-            rb.MoveRotation(rotation);
+            if (kinematicRotation)
+            {
+                transform.rotation = rotation;
+            }
+            else
+            {
+                rb.MoveRotation(rotation);
+            }
         }
 
         Vector3 CalculateMoveDirection()
         {
             Vector3 moveDirection = Vector3.zero;
 
-            float horizontal = unit.InputManager.Horizontal;
-            float vertical = unit.InputManager.Vertical;
+            float horizontal = unit.UnitInput.Horizontal;
+            float vertical = unit.UnitInput.Vertical;
 
             moveDirection += Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized * horizontal;
             moveDirection += Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized * vertical;
