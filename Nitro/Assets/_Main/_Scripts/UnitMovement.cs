@@ -5,77 +5,69 @@ namespace Synith
     [RequireComponent(typeof(Rigidbody))]
     public class UnitMovement : MonoBehaviour
     {
-        [SerializeField] float moveSpeed = 5f;
-        [SerializeField] float rotationSpeed = 360f;
+        [SerializeField] float moveSpeed = 4f;
+        [SerializeField] float rotationSpeed = 5f;
+        [SerializeField] float fixedSpeedRotateRatio = 60f;
+        [SerializeField] bool followCamera, fixedSpeedRotation;
 
         Rigidbody rb;
 
-        InputManager inputManager;
+        Transform cameraTransform;
 
-        Vector2 inputDirection;
+        Unit unit;
 
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            inputManager = GetComponent<InputManager>();
-        }
+            unit = GetComponent<Unit>();
 
-        private void Update()
-        {
-            HandleInput();  //TODO: Handle Input in separate class
+            cameraTransform = Camera.main.transform;
         }
-        void HandleInput()
-        {
-            inputDirection = inputManager.GetMovementInput();
-        }
-
-        void FixedUpdate()
+        public void HandleAllMovement()
         {
             HandleMovement();
+            HandleRotation();
         }
-
 
         void HandleMovement()
         {
             Vector3 moveDirection = CalculateMoveDirection();
-            Quaternion rotationDirection = CalculateRotationDirection();
-
             if (moveDirection != Vector3.zero)
             {
                 Vector3 position = transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-                Quaternion rotation = Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime);
-
-                rb.Move(position, rotation);
+                rb.MovePosition(position);
             }
+        }
+        void HandleRotation()
+        {
+            Quaternion rotationDirection = CalculateRotationDirection();
+
+            Quaternion rotation = fixedSpeedRotation ?
+                Quaternion.Slerp(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime) :
+                Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * fixedSpeedRotateRatio * Time.fixedDeltaTime);
+
+            rb.MoveRotation(rotation);
         }
 
         Vector3 CalculateMoveDirection()
         {
-            Vector2 input = inputDirection;
             Vector3 moveDirection = Vector3.zero;
-            moveDirection += Vector3.ProjectOnPlane(Camera.main.transform.right, transform.up).normalized * input.x;
-            moveDirection += Vector3.ProjectOnPlane(Camera.main.transform.forward, transform.up).normalized * input.y;
+
+            float horizontal = unit.InputManager.Horizontal;
+            float vertical = unit.InputManager.Vertical;
+
+            moveDirection += Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized * horizontal;
+            moveDirection += Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized * vertical;
+
             return moveDirection;
         }
         Quaternion CalculateRotationDirection()
-        {
-            float targetAngle = Camera.main.transform.eulerAngles.y; //TODO: Get camera angle somewhere else
-            Vector3 rotationDirection = new (0, targetAngle, 0);
-            return Quaternion.Euler(rotationDirection);
-        }
+            => followCamera ? CalculateRotationDirectionFromCamera() : CalculateRotationDirectionFromMovement();
 
+        Quaternion CalculateRotationDirectionFromMovement()
+            => CalculateMoveDirection() == Vector3.zero ? transform.rotation : Quaternion.LookRotation(CalculateMoveDirection());
 
-        Vector3 CalculateRotationDirection2()
-        {
-            if (CalculateMoveDirection() != Vector3.zero)
-            {
-                return CalculateMoveDirection();
-            }
-            else
-            {
-                return transform.forward;
-            }
-        }
-
+        Quaternion CalculateRotationDirectionFromCamera()
+            => Quaternion.Euler(new(0, cameraTransform.eulerAngles.y, 0));
     }
 }

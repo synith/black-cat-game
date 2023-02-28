@@ -9,6 +9,9 @@ namespace Synith
         PlayerControls playerControls;
         Vector2 movementInput;
 
+        public float Horizontal { get; private set; }
+        public float Vertical { get; private set; }
+
         void OnEnable()
         {
             if (playerControls == null)
@@ -24,6 +27,15 @@ namespace Synith
             playerControls.Disable();
         }
 
-        public Vector2 GetMovementInput() => movementInput;
+        public void HandleAllInput()
+        {
+            HandleMovementInput();
+        }
+
+        void HandleMovementInput()
+        {
+            Horizontal = movementInput.x;
+            Vertical = movementInput.y;
+        }
     }
 }
