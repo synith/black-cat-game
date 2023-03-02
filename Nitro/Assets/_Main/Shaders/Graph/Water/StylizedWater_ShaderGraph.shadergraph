@@ -5414,7 +5414,7 @@
     "m_Group": {
         "m_Id": "f61f419be26243ce9060c6edc9a308f0"
     },
-    "m_Name": "TextureScroll",
+    "m_Name": "TextureScrollNormal",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -6353,7 +6353,7 @@
     "m_Group": {
         "m_Id": "dc894504c76d473a96385a565c353888"
     },
-    "m_Name": "TextureScroll",
+    "m_Name": "TextureScrollNormal",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {

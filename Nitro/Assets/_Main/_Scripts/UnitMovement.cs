@@ -8,16 +8,19 @@ namespace Synith
         [SerializeField] float moveSpeed = 4f;
         [SerializeField] float rotationSpeed = 5f;
         [SerializeField] float fixedSpeedRotateRatio = 60f;
-        [SerializeField] float movementForce = 300f;
+        [SerializeField] float movementForce = 10f;
 
-        [SerializeField] bool followCamera;
+        [SerializeField, Tooltip("Rotation follows camera instead of movement")]
+        bool followCamera;
         [SerializeField, Tooltip("Rotate at a constant angular speed, uncheck for snappier rotations")]
         bool constantRotationRate;
         [SerializeField, Tooltip("Rotations are not effected by physics system")]
         bool kinematicRotation;
+        [SerializeField, Tooltip("Movements are not effected by physics system")]
+        bool kinematicMovement;
 
-        [SerializeField, Tooltip("Camera for this unit")] Transform cameraTransform;
-
+        [SerializeField, Tooltip("Camera for this unit")]
+        Transform cameraTransform;
 
         Rigidbody rb;
         Unit unit;
@@ -39,14 +42,19 @@ namespace Synith
         }
 
         void HandleMovement()
-        {
+        {            
             Vector3 moveDirection = CalculateMoveDirection();
             if (moveDirection != Vector3.zero)
             {
-                Vector3 position = transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-                rb.MovePosition(position);    
+                Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+
+                if (kinematicMovement)
+                    rb.MovePosition(transform.position + velocity);
+                else
+                    rb.AddForce(velocity * movementForce, ForceMode.VelocityChange);
             }
         }
+
         void HandleRotation()
         {
             Quaternion rotationDirection = CalculateRotationDirection();
