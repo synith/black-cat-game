@@ -9,7 +9,7 @@ namespace Synith
     {
         [SerializeField] CinemachineVirtualCamera unitCamera;
         [SerializeField] float zoomSpeed = 3f;
-        [SerializeField] float minCameraDistance = 1f, maxCameraDistance = 30f;
+        [SerializeField] float minCameraDistance = 1f, maxCameraDistance = 15f;
         CinemachineFramingTransposer cameraBody;
 
         Unit unit;
