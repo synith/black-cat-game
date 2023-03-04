@@ -47,5 +47,13 @@ namespace Synith
 
             ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templatePath, "NewScriptableObject.cs");
         }
+
+        [MenuItem("Assets/Create/Code/Singleton", priority = 45)]
+        public static void CreateSingletonMenuItem()
+        {
+            string templatePath = "Assets/Editor/ScriptTemplates/Singleton.cs.txt";
+
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templatePath, "NewSingleton.cs");
+        }
     }
 }
