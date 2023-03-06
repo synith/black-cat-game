@@ -10,6 +10,8 @@ namespace Synith
         [SerializeField] CinemachineVirtualCamera unitCamera;
         [SerializeField] float zoomSpeed = 3f;
         [SerializeField] float minCameraDistance = 1f, maxCameraDistance = 15f;
+        [SerializeField] bool invertZoom;
+
         CinemachineFramingTransposer cameraBody;
 
         Unit unit;
@@ -29,6 +31,9 @@ namespace Synith
         {
             float zoomValue = unit.UnitInput.Zoom;
             float zoomAmount = zoomValue * zoomSpeed * Time.deltaTime;
+
+            zoomAmount = invertZoom ? -zoomAmount : zoomAmount;
+
             cameraBody.m_CameraDistance = Mathf.Clamp(cameraBody.m_CameraDistance + zoomAmount, minCameraDistance, maxCameraDistance);
         }
     }

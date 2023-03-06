@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d98e43de272d79949940de831ad265a3, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.5258277, g: 0.98847735, b: 0.98760986, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -260,7 +260,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: acee36c2c22968943a0a0a6fdbe64d06, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -366,7 +366,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 1faf7a01699957e4bab463b62385cf8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -715,7 +715,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054069712}
   m_LocalRotation: {x: 0.2189948, y: 0, z: 0, w: 0.975726}
-  m_LocalPosition: {x: 0, y: 5.2218876, z: -8.931474}
+  m_LocalPosition: {x: 0, y: 2.773967, z: -3.752857}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -862,9 +862,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456941871}
   serializedVersion: 4
-  m_Mass: 20
+  m_Mass: 50
   m_Drag: 20
-  m_AngularDrag: 0.05
+  m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -945,9 +945,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitCamera: {fileID: 1481135533}
-  zoomSpeed: 3
+  zoomSpeed: 30
   minCameraDistance: 1
   maxCameraDistance: 10
+  invertZoom: 1
 --- !u!1 &1481135532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1014,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1481135532}
   m_LocalRotation: {x: 0.2189948, y: 0, z: 0, w: 0.975726}
-  m_LocalPosition: {x: 0, y: 5.2218876, z: -8.931474}
+  m_LocalPosition: {x: 0, y: 2.773967, z: -3.752857}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1155,7 +1156,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 9.879046
+  m_CameraDistance: 4.151011
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0

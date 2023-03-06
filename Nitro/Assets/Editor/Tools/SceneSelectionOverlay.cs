@@ -42,6 +42,9 @@ namespace Synith
 
                 Scene currentScene = SceneManager.GetActiveScene();
 
+                // ignore these names
+                string[] ignoredScenes = { "Basic", "Standard", "BuildTestScene" };
+
                 // Use this for exclusively selecting the scenes that are in the build.
                 // EditorBuildSettingsScene[] buildScenes = EditorBuildSettings.scenes;
 
@@ -52,6 +55,15 @@ namespace Synith
                     string path = AssetDatabase.GUIDToAssetPath(sceneGuids[i]);
 
                     string name = Path.GetFileNameWithoutExtension(path);
+
+                    bool isIgnored = false;
+                    foreach (string ignoredScene in ignoredScenes)
+                    {
+                        if (name == ignoredScene)
+                            isIgnored = true;
+                    }
+                    // don't list ignored scenes
+                    if (isIgnored) continue;
 
                     menu.AddItem(new(name), string.Compare(currentScene.name, name) == 0, () => OpenScene(currentScene, path));
                 }
