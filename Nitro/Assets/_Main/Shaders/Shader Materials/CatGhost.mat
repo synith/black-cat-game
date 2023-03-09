@@ -55,15 +55,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depth: 0.01
+    - _Depth: 0.54
     - _DepthStrength: 1
-    - _Fill: 0.066
-    - _Fresnel_Power: 7.94
+    - _Fill: 1
+    - _Fresnel_Power: 3.9
     - _QueueControl: 1
     - _QueueOffset: 0
-    - _Strength: 2.26
+    - _Strength: 1.01
     - _Texture_Speed: 0
     m_Colors:
-    - _Emission: {r: 6.4969864, g: 0.05023668, b: 0, a: 1}
+    - _Emission: {r: 0, g: 6.496987, b: 6.3948793, a: 1}
     - _Texture_Scale: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
