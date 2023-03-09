@@ -5,6 +5,7 @@ namespace Synith
     [RequireComponent(typeof(Rigidbody))]
     public class UnitMovement : MonoBehaviour
     {
+        #region Inspector Fields
         [SerializeField] float moveSpeed = 4f;
         [SerializeField] float rotationSpeed = 5f;
         [SerializeField] float fixedSpeedRotateRatio = 60f;
@@ -21,9 +22,14 @@ namespace Synith
 
         [SerializeField, Tooltip("Camera for this unit")]
         Transform cameraTransform;
+        #endregion
 
         Rigidbody rb;
         Unit unit;
+
+        Vector3 moveDirection;
+
+
 
         void Awake()
         {
@@ -41,10 +47,14 @@ namespace Synith
             HandleRotation();
         }
 
+        public bool IsMoving() => moveDirection != Vector3.zero;
+
         void HandleMovement()
         {            
             Vector3 moveDirection = CalculateMoveDirection();
-            if (moveDirection != Vector3.zero)
+            this.moveDirection = moveDirection;
+
+            if (IsMoving())
             {
                 Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
 
@@ -89,7 +99,7 @@ namespace Synith
             => followCamera ? CalculateRotationDirectionFromCamera() : CalculateRotationDirectionFromMovement();
 
         Quaternion CalculateRotationDirectionFromMovement()
-            => CalculateMoveDirection() == Vector3.zero ? transform.rotation : Quaternion.LookRotation(CalculateMoveDirection());
+            => IsMoving() ? Quaternion.LookRotation(CalculateMoveDirection()) : transform.rotation;
 
         Quaternion CalculateRotationDirectionFromCamera()
             => Quaternion.Euler(new(0, cameraTransform.eulerAngles.y, 0));
