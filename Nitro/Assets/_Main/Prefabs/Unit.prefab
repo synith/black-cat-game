@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7450710109875794193}
   - component: {fileID: 6180060658654242724}
   - component: {fileID: 3398450914474312596}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 3399914452186532134}
   - component: {fileID: 7121608746610795890}
   - component: {fileID: 3434875777438209521}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ Rigidbody:
   m_GameObject: {fileID: 4028984710348723736}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 10
+  m_Drag: 1
   m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -211,12 +211,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 3
-  fixedSpeedRotateRatio: 72
   movementForce: 10
+  dragFactor: 10
   followCamera: 0
   constantRotationRate: 0
-  kinematicRotation: 0
-  kinematicMovement: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 129
+  isGrounded: 0
+  groundCheckRadius: 0.2
   cameraTransform: {fileID: 0}
 --- !u!114 &7121608746610795890
 MonoBehaviour:
@@ -231,9 +234,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitCamera: {fileID: 0}
-  zoomSpeed: 30
-  minCameraDistance: 1
-  maxCameraDistance: 15
+  zoomSpeed: 50
+  minCameraDistance: 3
+  maxCameraDistance: 10
   invertZoom: 1
 --- !u!114 &3434875777438209521
 MonoBehaviour:
@@ -260,7 +263,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1350740520425214383}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,9 +294,61 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1350740520425214383}
     m_Modifications:
+    - target: {fileID: 100000, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
       propertyPath: m_Name
       value: Cat_Ghost
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100012, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100014, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100016, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100020, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100022, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100024, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 61d2a89d311ca8d458151eb8a2acc586, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
