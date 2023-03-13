@@ -8,17 +8,21 @@ namespace Synith
         #region Inspector Fields
         [SerializeField] float moveSpeed = 3f;
         [SerializeField] float rotationSpeed = 3f;
-        [SerializeField] float fixedSpeedRotateRatio = 72f;
         [SerializeField] float movementForce = 30f;
+        [SerializeField] float dragFactor = 1f;
 
         [SerializeField, Tooltip("Rotation follows camera instead of movement")]
         bool followCamera;
         [SerializeField, Tooltip("Rotate at a constant angular speed, uncheck for snappier rotations")]
         bool constantRotationRate;
-        [SerializeField, Tooltip("Rotations are not effected by physics system")]
-        bool kinematicRotation;
-        [SerializeField, Tooltip("Movements are not effected by physics system")]
-        bool kinematicMovement;
+
+        [SerializeField] LayerMask groundLayer;
+
+        [SerializeField]
+        bool isGrounded;
+        [SerializeField, Range(0.05f, 1f)]
+        float groundCheckRadius = 0.2f;
+
 
         [SerializeField, Tooltip("Camera for this unit")]
         Transform cameraTransform;
@@ -27,7 +31,6 @@ namespace Synith
         Rigidbody rb;
         Unit unit;
 
-        Vector3 moveDirection;
 
         void Awake()
         {
@@ -40,27 +43,46 @@ namespace Synith
             }
         }
 
-        public void HandleAllMovement()
+        private void OnDrawGizmos()
         {
-            HandleMovement();
-            HandleRotation();
+            Gizmos.color = new(1, 1, 1, 0.2f);
+            Gizmos.DrawSphere(transform.position, groundCheckRadius);
         }
 
-        public bool IsMoving() => moveDirection != Vector3.zero;
+        public void HandleAllMovement()
+        {
+            HandleGroundCheck();
+            HandleMovement();
+            HandleRotation();
+            HandleDrag();
+        }
+
+        void HandleGroundCheck()
+        {
+            float groundCheckRadius = this.groundCheckRadius;
+            isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayer);
+        }
+
+        void HandleDrag()
+        {
+            Vector3 dragVelocity = -rb.velocity;
+            float currentDragFactor = isGrounded ? dragFactor : 0f;
+
+            rb.AddForce(dragVelocity * currentDragFactor);
+        }
+
+        public bool IsMoving() => CalculateMoveDirection() != Vector3.zero;
 
         void HandleMovement()
-        {            
+        {
             Vector3 moveDirection = CalculateMoveDirection();
-            this.moveDirection = moveDirection;
 
-            if (IsMoving())
+            if (moveDirection != Vector3.zero)
             {
-                Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+                if (!isGrounded) return;
 
-                if (kinematicMovement)
-                    rb.MovePosition(transform.position + velocity);
-                else
-                    rb.AddForce(velocity * movementForce, ForceMode.VelocityChange);
+                Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+                rb.AddForce(velocity * movementForce, ForceMode.VelocityChange);
             }
         }
 
@@ -68,18 +90,14 @@ namespace Synith
         {
             Quaternion rotationDirection = CalculateRotationDirection();
 
+            float constantRotationRateRatio = 72f;
+
             Quaternion rotation = constantRotationRate ?
-                Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * fixedSpeedRotateRatio * Time.fixedDeltaTime) :
+                Quaternion.RotateTowards(transform.rotation, rotationDirection, rotationSpeed * constantRotationRateRatio * Time.fixedDeltaTime) :
                 Quaternion.Slerp(transform.rotation, rotationDirection, rotationSpeed * Time.fixedDeltaTime);
 
-            if (kinematicRotation)
-            {
-                transform.rotation = rotation;
-            }
-            else
-            {
-                rb.MoveRotation(rotation);
-            }
+
+            rb.MoveRotation(rotation);
         }
 
         Vector3 CalculateMoveDirection()

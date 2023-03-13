@@ -25,7 +25,7 @@ namespace Synith
             unit = GetComponent<Unit>();
         }
 
-        private void Update()
+        void FixedUpdate()
         {
 
             Vector3 bottomOfCollider = transform.position + Vector3.up * (capsuleCollider.center.y - capsuleCollider.radius);
