@@ -209,10 +209,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 204f5bc042f9b9a47a9dda411bc9a57a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentDrag: 0
   moveSpeed: 5
   rotationSpeed: 3
   movementForce: 10
   dragFactor: 10
+  jumpForce: 15
   followCamera: 0
   constantRotationRate: 0
   groundLayer:
@@ -254,6 +256,7 @@ MonoBehaviour:
   rideHeight: 0.38
   rideSpringStrength: 500
   rideSpringDamper: 10
+  disabledTime: 0.1
 --- !u!1 &6149351454001981348
 GameObject:
   m_ObjectHideFlags: 0

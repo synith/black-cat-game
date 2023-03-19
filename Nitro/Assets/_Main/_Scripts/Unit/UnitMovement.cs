@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Synith
@@ -5,11 +6,14 @@ namespace Synith
     [RequireComponent(typeof(Rigidbody))]
     public class UnitMovement : MonoBehaviour
     {
+        [SerializeField] float currentDrag;
+
         #region Inspector Fields
         [SerializeField] float moveSpeed = 3f;
         [SerializeField] float rotationSpeed = 3f;
         [SerializeField] float movementForce = 30f;
         [SerializeField] float dragFactor = 1f;
+        [SerializeField] float jumpForce = 30f;
 
         [SerializeField, Tooltip("Rotation follows camera instead of movement")]
         bool followCamera;
@@ -31,6 +35,17 @@ namespace Synith
         Rigidbody rb;
         Unit unit;
 
+        public event Action OnUnitAboutToJump;
+
+        public bool IsMoving() => CalculateMoveDirection() != Vector3.zero;
+
+        public void HandleAllMovement()
+        {
+            HandleGroundCheck();
+            HandleMovement();
+            HandleRotation();
+            HandleDrag();
+        }
 
         void Awake()
         {
@@ -43,18 +58,15 @@ namespace Synith
             }
         }
 
-        private void OnDrawGizmos()
+        void Start()
+        {
+            unit.UnitInput.OnJumpPressed += () => Jump();
+        }
+
+        void OnDrawGizmos()
         {
             Gizmos.color = new(1, 1, 1, 0.2f);
             Gizmos.DrawSphere(transform.position, groundCheckRadius);
-        }
-
-        public void HandleAllMovement()
-        {
-            HandleGroundCheck();
-            HandleMovement();
-            HandleRotation();
-            HandleDrag();
         }
 
         void HandleGroundCheck()
@@ -67,11 +79,10 @@ namespace Synith
         {
             Vector3 dragVelocity = -rb.velocity;
             float currentDragFactor = isGrounded ? dragFactor : 0f;
+            currentDrag = currentDragFactor;
 
             rb.AddForce(dragVelocity * currentDragFactor);
         }
-
-        public bool IsMoving() => CalculateMoveDirection() != Vector3.zero;
 
         void HandleMovement()
         {
@@ -98,6 +109,15 @@ namespace Synith
 
 
             rb.MoveRotation(rotation);
+        }
+
+        void Jump()
+        {
+            if (!isGrounded) return;
+
+            OnUnitAboutToJump?.Invoke();
+
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
         Vector3 CalculateMoveDirection()
