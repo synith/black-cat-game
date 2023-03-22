@@ -12,7 +12,6 @@ namespace Synith
         [SerializeField] float moveSpeed = 3f;
         [SerializeField] float rotationSpeed = 3f;
         [SerializeField] float movementForce = 30f;
-        [SerializeField] float dragFactor = 1f;
         [SerializeField] float jumpForce = 30f;
 
         [SerializeField, Tooltip("Rotation follows camera instead of movement")]
@@ -43,6 +42,7 @@ namespace Synith
         {
             HandleGroundCheck();
             HandleMovement();
+            HandleGravity();
             HandleRotation();
             HandleDrag();
         }
@@ -78,8 +78,12 @@ namespace Synith
         void HandleDrag()
         {
             Vector3 dragVelocity = -rb.velocity;
-            float currentDragFactor = isGrounded ? dragFactor : 0f;
-            currentDrag = currentDragFactor;
+
+            float groundDrag = 10f;
+            float airDrag = 1f;
+            float currentDragFactor = isGrounded ? groundDrag : airDrag;
+
+            currentDrag = currentDragFactor; // Just to show in inspector
 
             rb.AddForce(dragVelocity * currentDragFactor);
         }
@@ -90,11 +94,25 @@ namespace Synith
 
             if (moveDirection != Vector3.zero)
             {
-                if (!isGrounded) return;
+                float walkingSpeed = 1f;
+                float airSpeed = 0.25f;
 
-                Vector3 velocity = moveDirection * moveSpeed * Time.fixedDeltaTime;
+                float speed = isGrounded ? walkingSpeed : airSpeed;
+                speed *= moveSpeed;
+
+                Vector3 velocity = moveDirection * speed * Time.fixedDeltaTime;
                 rb.AddForce(velocity * movementForce, ForceMode.VelocityChange);
             }
+        }
+
+        void HandleGravity()
+        {
+            Vector3 gravityVelocity = Physics.gravity;
+            float groundGravityModifier = 1f;
+            float airGravityModifier = 2f;
+
+            float gravityModifier = isGrounded ? groundGravityModifier : airGravityModifier;
+            rb.AddForce(gravityVelocity * gravityModifier);
         }
 
         void HandleRotation()
