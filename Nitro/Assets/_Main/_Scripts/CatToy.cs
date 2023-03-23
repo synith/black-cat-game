@@ -1,27 +1,41 @@
-using System;
-using System.Collections;
+using Synith;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Synith
+public class CatToy : MonoBehaviour, IObservable<CatToy>
 {
-    public class CatToy : MonoBehaviour
+    private List<IObserver<CatToy>> observers = new List<IObserver<CatToy>>();
+
+    public void Subscribe(IObserver<CatToy> observer)
     {
-        public static event EventHandler OnDestroyed;
+        observers.Add(observer);
+    }
 
-        void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.TryGetComponent(out Ground ground))
-            {
-                float delay = 1f;
-                Invoke(nameof(DestroySelf), delay);
-            }
-        }
+    public void Unsubscribe(IObserver<CatToy> observer)
+    {
+        observers.Remove(observer);
+    }
 
-        void DestroySelf()
+    public void Notify(CatToy value)
+    {
+        foreach (var observer in observers)
         {
-            OnDestroyed?.Invoke(this, EventArgs.Empty);
-            Destroy(gameObject);
+            observer.OnNotify(value);
         }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Ground ground))
+        {
+            float delay = 1f;
+            Invoke(nameof(DestroySelf), delay);
+        }
+    }
+
+    void DestroySelf()
+    {
+        Notify(this);
+        Destroy(gameObject);
     }
 }

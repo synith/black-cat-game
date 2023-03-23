@@ -1,31 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 namespace Synith
 {
-    public class StatusUI : MonoBehaviour
+    public class StatusUI : MonoBehaviour, IObserver<ToySpawn>
     {
         [SerializeField] CatToyTracker catToyTracker;
         [SerializeField] TextMeshProUGUI text;
 
         void Start()
         {
-            catToyTracker.OnToyDestroyedCount += CatToyTracker_OnToyDestroyedCount;
-            catToyTracker.OnGameWon += CatToyTracker_OnGameWon;
+            catToyTracker.Subscribe(this);
         }
 
-        void CatToyTracker_OnGameWon(object sender, System.EventArgs e)
+        public void OnNotify(ToySpawn value)
         {
-            Invoke(nameof(SetGameWonText), 1.5f);
+            UpdateToyCountText();
         }
 
-        void CatToyTracker_OnToyDestroyedCount(object sender, int e)
+        void OnDestroy()
         {
-            text.SetText($"{e} / {catToyTracker.CatToyMax}");
+            catToyTracker.Unsubscribe(this);
         }
 
-        void SetGameWonText() => text.SetText("Bad Cat!");
+        void UpdateToyCountText()
+        {
+            text.SetText($"{catToyTracker.CatToyCurrent} / {catToyTracker.CatToyMax}");
+        }
     }
 }
