@@ -8808,7 +8808,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791517000}
   serializedVersion: 4
-  m_Mass: 1.5
+  m_Mass: 0.8
   m_Drag: 0.1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -8834,7 +8834,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791517000}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1d3750531b94bf343ae6307a16c68d7e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -13856,7 +13856,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193524691}
   serializedVersion: 4
-  m_Mass: 1.5
+  m_Mass: 0.8
   m_Drag: 0.1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -13882,7 +13882,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193524691}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1d3750531b94bf343ae6307a16c68d7e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
